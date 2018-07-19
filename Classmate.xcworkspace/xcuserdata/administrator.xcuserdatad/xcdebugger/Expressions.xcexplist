@@ -3,6 +3,81 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "PostsViewController.tableView(_:cellForRowAt:):PostsViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "bookmarked">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in PostsViewController.setupObservers():PostsViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "liked_key">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in EditProfileViewController.viewDidLoad():EditProfileViewController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #2 in CreatePostViewController.checkButtonClicked(_:):CreatePostViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "GlobalVariable.sharedManager.reads">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PostTextTableViewCell.bookmarkButtonClicked(_:):PostTextTableViewCell.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "bookmarkKey">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "EditProfileViewController.viewDidLoad():EditProfileViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "currentUser.uid">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in PostsViewController.loadPosts():PostsViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.class_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Class.init(snapshot:):Class.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "last_post">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #2 in PostsViewController.setupObservers():PostsViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.bookmarked">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "MembersViewController.tableView(_:numberOfRowsInSection:):MembersViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "members">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "EditProfileViewController.showUserData():EditProfileViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -11,7 +86,12 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #1 in EditProfileViewController.viewDidLoad():EditProfileViewController.swift">
+         contextName = "Post.init(snapshot:):Post.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "snapshot.value">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
    </ContextStates>
 </VariablesViewState>

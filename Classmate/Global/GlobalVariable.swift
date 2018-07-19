@@ -11,6 +11,8 @@ import Foundation
 class GlobalVariable {
     
     var loggedInUser: User?
+    var reads: [String : String] = [:]
+    var is24Format = true
     
     class var sharedManager : GlobalVariable {
         struct Static {

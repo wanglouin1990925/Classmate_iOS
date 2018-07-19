@@ -31,13 +31,15 @@ class ChoosePasswordViewController: UIViewController {
     @IBOutlet weak var login_passwordTextField: UITextField!
     @IBOutlet weak var nextButton: UIButton!
     
+    @IBOutlet weak var containerView: UIView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         if screenType == SCREEN_TYPE.LOGIN_SCREEN {
-            loginOverView.frame = CGRect.init(x: 0, y: 64, width: self.view.bounds.width, height: self.view.bounds.height - 64)
-            self.view.addSubview(loginOverView)
+            loginOverView.frame = CGRect.init(x: 0, y: 0, width: self.view.bounds.width, height: self.containerView.bounds.height)
+            containerView.addSubview(loginOverView)
         } else if screenType == SCREEN_TYPE.REGISTRATION_SCREEN {
             verificationOverView.removeFromSuperview()
         }
@@ -58,7 +60,6 @@ class ChoosePasswordViewController: UIViewController {
 
     func checkVerificationStatus() {
         let password = screenType == SCREEN_TYPE.LOGIN_SCREEN ? login_passwordTextField.text : passwordTextField.text
-        
         Auth.auth().signIn(withEmail: email, password: password!) { (result, error) in
             if error != nil {
                 self.checkVerificationStatus()
@@ -92,14 +93,17 @@ class ChoosePasswordViewController: UIViewController {
             if password != confirm {
                 GlobalFunction.sharedManager.showAlertMessage("Error", "Password does not match the confirm password")
             } else {
+                GlobalFunction.sharedManager.showProgressView("Signing...")
                 Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
+                    
+                    GlobalFunction.sharedManager.hideProgressView()
                     if let error = error {
                         GlobalFunction.sharedManager.showAlertMessage("Error", error.localizedDescription)
                     } else {
                         self.nextButton.isHidden = true
                         
-                        self.verificationOverView.frame = CGRect.init(x: 0, y: 64, width: self.view.bounds.width, height: self.view.bounds.height - 64)
-                        self.view.addSubview(self.verificationOverView)
+                        self.verificationOverView.frame = CGRect.init(x: 0, y: 0, width: self.view.bounds.width, height: self.containerView.bounds.height)
+                        self.containerView.addSubview(self.verificationOverView)
                         
                         Auth.auth().currentUser?.sendEmailVerification { (error) in
                             if let error = error {
@@ -114,7 +118,10 @@ class ChoosePasswordViewController: UIViewController {
         } else {
             guard let login_password = login_passwordTextField.text else { return }
             
+            GlobalFunction.sharedManager.showProgressView("Signing...")
             Auth.auth().signIn(withEmail: email, password: login_password) { (result, error) in
+                
+                GlobalFunction.sharedManager.hideProgressView()
                 if let error = error {
                     GlobalFunction.sharedManager.showAlertMessage("Error", error.localizedDescription)
                 } else {
@@ -124,9 +131,8 @@ class ChoosePasswordViewController: UIViewController {
                         self.navigationController?.pushViewController(viewController, animated: true)
                     } else {
                         self.nextButton.isHidden = true
-                        
-                        self.verificationOverView.frame = CGRect.init(x: 0, y: 64, width: self.view.bounds.width, height: self.view.bounds.height - 64)
-                        self.view.addSubview(self.verificationOverView)
+                        self.verificationOverView.frame = CGRect.init(x: 0, y: 0, width: self.view.bounds.width, height: self.containerView.bounds.height)
+                        self.containerView.addSubview(self.verificationOverView)
                         
                         Auth.auth().currentUser?.sendEmailVerification { (error) in
                             if let error = error {
@@ -146,7 +152,7 @@ class ChoosePasswordViewController: UIViewController {
             if let error = error {
                 GlobalFunction.sharedManager.showAlertMessage("Error", error.localizedDescription)
             } else {
-                self.checkVerificationStatus()
+                
             }
         }
     }

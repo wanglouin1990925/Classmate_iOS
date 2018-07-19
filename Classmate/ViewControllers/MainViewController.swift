@@ -9,18 +9,16 @@
 import UIKit
 import Firebase
 import FirebaseAuth
+import FirebaseDatabase
 
 class MainViewController: UIViewController {
-    
-    var authStateListenerHandle: AuthStateDidChangeListenerHandle? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -28,16 +26,10 @@ class MainViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        authStateListenerHandle = Auth.auth().addStateDidChangeListener { (auth, user) in
-
-        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-
-        Auth.auth().removeStateDidChangeListener(authStateListenerHandle!)
     }
     
 }

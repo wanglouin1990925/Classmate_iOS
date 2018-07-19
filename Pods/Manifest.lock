@@ -42,6 +42,7 @@ PODS:
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
+  - NextGrowingTextView (1.2.2)
   - NVActivityIndicatorView (4.1.1):
     - NVActivityIndicatorView/Presenter (= 4.1.1)
   - NVActivityIndicatorView/Presenter (4.1.1)
@@ -53,6 +54,7 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/Database
   - Firebase/Storage
+  - NextGrowingTextView
   - NVActivityIndicatorView (~> 4.1.1)
   - "UITextView+Placeholder"
 
@@ -70,6 +72,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - leveldb-library
     - nanopb
+    - NextGrowingTextView
     - NVActivityIndicatorView
     - "UITextView+Placeholder"
 
@@ -86,9 +89,10 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 5fa5b80fd20e439ef5f545fb2cb3ca6c6714caa2
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  NextGrowingTextView: 78c8b96f7ac6dc845f5babb27dcf7c18dd3210ec
   NVActivityIndicatorView: 60109b9bf46efc2e71ab81453196ccdfdfeea870
   "UITextView+Placeholder": 0c3efd97f37ea64bde7f34cc6e90fe02e87b3909
 
-PODFILE CHECKSUM: 710deee318cc1ccf762ddc4c59b2cfc71a2544cf
+PODFILE CHECKSUM: e9b0c5d6ddf579b8d7e6b869c63bdb2eacdbe55b
 
 COCOAPODS: 1.5.3

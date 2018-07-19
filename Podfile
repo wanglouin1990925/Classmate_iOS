@@ -12,6 +12,9 @@ target 'Classmate' do
     pod 'NVActivityIndicatorView', '~> 4.1.1'
     pod 'AZDialogView', '~> 1.2.1'
     pod 'UITextView+Placeholder'
+#    pod 'BadgeSwift', '~> 5.0'
+#    pod 'MIBadgeButton-Swift', :git => 'https://github.com/mustafaibrahim989/MIBadgeButton-Swift.git', :branch => 'master'
+    pod 'NextGrowingTextView'
 
   # Pods for Classmate
 

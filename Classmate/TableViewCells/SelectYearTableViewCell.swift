@@ -15,6 +15,7 @@ protocol SelectYearTableViewCellDelegate: NSObjectProtocol {
 class SelectYearTableViewCell: UITableViewCell {
 
     var delegate: SelectYearTableViewCellDelegate?
+    
     @IBOutlet weak var selectYearButton: UIButton!
     
     override func awakeFromNib() {

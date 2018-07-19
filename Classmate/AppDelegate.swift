@@ -8,20 +8,65 @@
 
 import UIKit
 import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var databaseReference: DatabaseReference?
+    
+    func sharedInstance() -> AppDelegate {
+        return UIApplication.shared.delegate as! AppDelegate
+    }
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
         UIApplication.shared.statusBarStyle = .lightContent
         
         FirebaseApp.configure()
+        databaseReference = Database.database().reference()
+        
+        if Auth.auth().currentUser != nil {
+            if let currentUser = Auth.auth().currentUser {
+                GlobalFunction.sharedManager.showProgressView("Loading...")
+                databaseReference?.child("users").child(currentUser.uid).observeSingleEvent(of: .value) { (snapshot) in
+                    
+                    GlobalFunction.sharedManager.hideProgressView()
+                    if let user = User.init(snapshot: snapshot) {
+                        GlobalVariable.sharedManager.loggedInUser = user
+                        self.loginAction()
+                    } else {
+
+                    }
+                }
+            }
+        }
+        
+        let locale = NSLocale.current
+        let formatter : String = DateFormatter.dateFormat(fromTemplate: "j", options:0, locale:locale)!
+        if formatter.contains("a") {
+            GlobalVariable.sharedManager.is24Format = false
+        } else {
+            GlobalVariable.sharedManager.is24Format = false
+        }
         
         return true
+    }
+    
+    func loadReads() {
+        databaseReference?.child("reads").child(Auth.auth().currentUser!.uid).observeSingleEvent(of: .value) { (snapshot) in
+            GlobalVariable.sharedManager.reads.removeAll()
+            for child in snapshot.children {
+                if let child_snapshot = child as? DataSnapshot {
+                    if let last_seen = child_snapshot.value as? String {
+                        GlobalVariable.sharedManager.reads[child_snapshot.key] = last_seen
+                    }
+                }
+            }
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -46,6 +91,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
+    func loginAction() {
+        loadReads()
+        
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        let mainTabbarController = storyboard.instantiateViewController(withIdentifier: "MainTabbarViewController") as! MainTabbarViewController
+        
+        UIView.transition(with: self.window!, duration: 0.5, options: .transitionFlipFromLeft, animations: {
+            self.window?.rootViewController = mainTabbarController
+            self.window?.makeKeyAndVisible()
+        }, completion: nil)
+    }
+    
+    func logoutAction() {
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        let viewController = storyboard.instantiateViewController(withIdentifier: "StartViewController") as! StartViewController
+        
+        let navigationController = UINavigationController.init(rootViewController: viewController)
+        navigationController.setNavigationBarHidden(true, animated: false)
+        
+        UIView.transition(with: self.window!, duration: 0.5, options: .transitionFlipFromRight, animations: {
+            self.window?.rootViewController = navigationController
+            self.window?.makeKeyAndVisible()
+        }, completion: nil)
+    }
+    
 }
 

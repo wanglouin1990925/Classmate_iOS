@@ -67,4 +67,20 @@ open class GlobalFunction {
         }
     }
     
+    open func getLocalTimeStampFromUTC(_ utc: String) -> String {
+        let dateFormatter = DateFormatter.init()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.timeZone = TimeZone.init(abbreviation: "UTC")
+        guard let date = dateFormatter.date(from: utc) else { return "" }
+        
+        if GlobalVariable.sharedManager.is24Format {
+            dateFormatter.dateFormat = "MMM d, yyyy - h:mm a"
+        } else {
+            dateFormatter.dateFormat = "MMM d, yyyy - H:mm"
+        }
+        
+        dateFormatter.timeZone = TimeZone.current
+        return dateFormatter.string(from: date)
+        
+    }
 }

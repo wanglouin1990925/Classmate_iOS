@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>581945607565-g5gmclh04a67d2h496e1eplfag0kf0kk.apps.googleusercontent.com</string>
+	<string>971892299873-5kd29pnmpm00miep9ngf65qgsalcd7mg.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.581945607565-g5gmclh04a67d2h496e1eplfag0kf0kk</string>
+	<string>com.googleusercontent.apps.971892299873-5kd29pnmpm00miep9ngf65qgsalcd7mg</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBaYHXR_sSxu1k240iZvLNckA3DFiq4jsE</string>
+	<string>AIzaSyC37jYo9l992Prg_t0L9gbRvirCUrvgQTE</string>
 	<key>GCM_SENDER_ID</key>
-	<string>581945607565</string>
+	<string>971892299873</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.cloudtenlabs.classmate</string>
 	<key>PROJECT_ID</key>
-	<string>classmate-71db8</string>
+	<string>classmate-storage</string>
 	<key>STORAGE_BUCKET</key>
-	<string>classmate-71db8.appspot.com</string>
+	<string>classmate-storage.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true></true>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:581945607565:ios:2b22e775a7ea1739</string>
+	<string>1:971892299873:ios:2b22e775a7ea1739</string>
 	<key>DATABASE_URL</key>
-	<string>https://classmate-71db8.firebaseio.com</string>
+	<string>https://classmate-storage.firebaseio.com</string>
 </dict>
 </plist>
