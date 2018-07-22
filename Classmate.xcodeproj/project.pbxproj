@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C59AA6121052AEE002EDF38 /* ClassmateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C59AA6021052AEE002EDF38 /* ClassmateTests.swift */; };
 		C305C41D20FD8BBD0097758B /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = C305C41C20FD8BBC0097758B /* Post.swift */; };
 		C310D14520EC81C500F83727 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C310D14420EC81C500F83727 /* MainViewController.swift */; };
 		C311986B20F7E19B00BA1E7D /* MainTabbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C311986A20F7E19B00BA1E7D /* MainTabbarViewController.swift */; };
@@ -58,8 +59,21 @@
 		DDCD751706827A1672732FD0 /* Pods_Classmate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD16CC5E885C2F57297ACDFE /* Pods_Classmate.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		3C59AA6321052AEE002EDF38 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C349C1F120EBFBDB00594810 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C349C1F820EBFBDB00594810;
+			remoteInfo = Classmate;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		1761A8888510F6584E69251F /* Pods-Classmate.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Classmate.release.xcconfig"; path = "Pods/Target Support Files/Pods-Classmate/Pods-Classmate.release.xcconfig"; sourceTree = "<group>"; };
+		3C59AA5E21052AEE002EDF38 /* ClassmateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClassmateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C59AA6021052AEE002EDF38 /* ClassmateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassmateTests.swift; sourceTree = "<group>"; };
+		3C59AA6221052AEE002EDF38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		58B71409BC156399E4ABD13E /* Pods-Classmate.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Classmate.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Classmate/Pods-Classmate.debug.xcconfig"; sourceTree = "<group>"; };
 		C305C41C20FD8BBC0097758B /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		C310D14420EC81C500F83727 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -115,6 +129,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3C59AA5B21052AEE002EDF38 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C349C1F620EBFBDB00594810 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -136,6 +157,15 @@
 				1761A8888510F6584E69251F /* Pods-Classmate.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		3C59AA5F21052AEE002EDF38 /* ClassmateTests */ = {
+			isa = PBXGroup;
+			children = (
+				3C59AA6021052AEE002EDF38 /* ClassmateTests.swift */,
+				3C59AA6221052AEE002EDF38 /* Info.plist */,
+			);
+			path = ClassmateTests;
 			sourceTree = "<group>";
 		};
 		B9621F6C93608EDA5C537C8F /* Frameworks */ = {
@@ -162,6 +192,7 @@
 			isa = PBXGroup;
 			children = (
 				C349C1FB20EBFBDB00594810 /* Classmate */,
+				3C59AA5F21052AEE002EDF38 /* ClassmateTests */,
 				C349C1FA20EBFBDB00594810 /* Products */,
 				37E0E36E11790044B6E5695C /* Pods */,
 				B9621F6C93608EDA5C537C8F /* Frameworks */,
@@ -172,6 +203,7 @@
 			isa = PBXGroup;
 			children = (
 				C349C1F920EBFBDB00594810 /* Classmate.app */,
+				3C59AA5E21052AEE002EDF38 /* ClassmateTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -271,6 +303,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		3C59AA5D21052AEE002EDF38 /* ClassmateTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C59AA6721052AEE002EDF38 /* Build configuration list for PBXNativeTarget "ClassmateTests" */;
+			buildPhases = (
+				3C59AA5A21052AEE002EDF38 /* Sources */,
+				3C59AA5B21052AEE002EDF38 /* Frameworks */,
+				3C59AA5C21052AEE002EDF38 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3C59AA6421052AEE002EDF38 /* PBXTargetDependency */,
+			);
+			name = ClassmateTests;
+			productName = ClassmateTests;
+			productReference = 3C59AA5E21052AEE002EDF38 /* ClassmateTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		C349C1F820EBFBDB00594810 /* Classmate */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C349C20B20EBFBDE00594810 /* Build configuration list for PBXNativeTarget "Classmate" */;
@@ -300,6 +350,10 @@
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = Administrator;
 				TargetAttributes = {
+					3C59AA5D21052AEE002EDF38 = {
+						CreatedOnToolsVersion = 9.4.1;
+						TestTargetID = C349C1F820EBFBDB00594810;
+					};
 					C349C1F820EBFBDB00594810 = {
 						CreatedOnToolsVersion = 9.4;
 					};
@@ -319,11 +373,19 @@
 			projectRoot = "";
 			targets = (
 				C349C1F820EBFBDB00594810 /* Classmate */,
+				3C59AA5D21052AEE002EDF38 /* ClassmateTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		3C59AA5C21052AEE002EDF38 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C349C1F720EBFBDB00594810 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -397,6 +459,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		3C59AA5A21052AEE002EDF38 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C59AA6121052AEE002EDF38 /* ClassmateTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C349C1F520EBFBDB00594810 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -441,6 +511,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		3C59AA6421052AEE002EDF38 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C349C1F820EBFBDB00594810 /* Classmate */;
+			targetProxy = 3C59AA6321052AEE002EDF38 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		C349C20020EBFBDB00594810 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -461,6 +539,46 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		3C59AA6521052AEE002EDF38 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7HHGDK38HR;
+				INFOPLIST_FILE = ClassmateTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = community.classmate.ClassmateTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Classmate.app/Classmate";
+			};
+			name = Debug;
+		};
+		3C59AA6621052AEE002EDF38 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7HHGDK38HR;
+				INFOPLIST_FILE = ClassmateTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = community.classmate.ClassmateTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Classmate.app/Classmate";
+			};
+			name = Release;
+		};
 		C349C20920EBFBDE00594810 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -618,6 +736,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3C59AA6721052AEE002EDF38 /* Build configuration list for PBXNativeTarget "ClassmateTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C59AA6521052AEE002EDF38 /* Debug */,
+				3C59AA6621052AEE002EDF38 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C349C1F420EBFBDB00594810 /* Build configuration list for PBXProject "Classmate" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
