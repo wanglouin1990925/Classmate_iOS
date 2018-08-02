@@ -21,7 +21,7 @@ class PostsViewController: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var categoryButton: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
     
-    var categories: [String] = ["All", "Homework", "Project", "Exam", "Other"]
+    var categories: [String] = ["All", "Homework", "Project", "Exam", "Bookmark", "Other"]
     var posts = [Post]()
     var selectedClass: Class?
     var selectedCategory = "All"
@@ -144,10 +144,10 @@ class PostsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func getLabelHeight(_ text: String) -> CGFloat {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width - 30, height: CGFloat.greatestFiniteMagnitude))
-        label.numberOfLines = 0
-        label.lineBreakMode = NSLineBreakMode.byTruncatingTail
-        label.font = UIFont.init(name: "Avenir-Light", size: 15)
+        let label = UITextView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width - 20, height: CGFloat.greatestFiniteMagnitude))
+//        label.numberOfLines = 0
+//        label.lineBreakMode = NSLineBreakMode.byTruncatingTail
+        label.font = UIFont.init(name: "Avenir-Light", size: 14)
         label.text = text
         label.sizeToFit()
         return label.frame.height
@@ -166,16 +166,21 @@ class PostsViewController: UIViewController, UITableViewDataSource, UITableViewD
                     continue
                 }
                 if let post = Post.init(snapshot: child_snapshot) {
-                    if (post.category == self.selectedCategory || self.selectedCategory == "All") && post.deleted == 0 {
-                        self.posts.append(post)
+                    if self.selectedCategory == "Bookmark" {
+                        if self.bookmarked.keys.contains(post.id!) {
+                            self.posts.append(post)
+                        }
+                    } else {
+                        if (post.category == self.selectedCategory || self.selectedCategory == "All") && post.deleted == 0 {
+                            self.posts.append(post)
+                        }
                     }
                     
                     if last_post_id < Int(post.id ?? "-1")! {
                         last_post_id = Int(post.id ?? "-1")!
                     }
                 }
-            }
-            
+            }            
             self.posts.sort(by: {$0.post_date > $1.post_date})
             
             self.refreshControl.endRefreshing()
@@ -215,13 +220,17 @@ class PostsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if posts[indexPath.row].video != "" {
-            return 80.0 + getLabelHeight(posts[indexPath.row].description) + 410.0
-        } else if posts[indexPath.row].image != "" {
-            return 80.0 + getLabelHeight(posts[indexPath.row].description) + 410.0
+        if posts[indexPath.row].report_count >= 3 {
+            return 140
         } else {
-            return 80.0 + getLabelHeight(posts[indexPath.row].description) + 55.0
-        }
+            if posts[indexPath.row].video != "" {
+                return 80.0 + getLabelHeight(posts[indexPath.row].description) + 410.0
+            } else if posts[indexPath.row].image != "" {
+                return 80.0 + getLabelHeight(posts[indexPath.row].description) + 410.0
+            } else {
+                return 80.0 + getLabelHeight(posts[indexPath.row].description) + 55.0
+            }
+        }        
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -315,9 +324,14 @@ class PostsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if posts[indexPath.row].report_count >= 3 {
+            return
+        }
+        
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "PostViewController") as! PostViewController
         viewController.post = posts[indexPath.row]
+        viewController.selectedClass = selectedClass
         
         var bookmark_key = ""
         for key in bookmarked.keys {
@@ -360,9 +374,14 @@ class PostsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func postCellCommentButtonClicked(_ post: Post) {
+        if post.report_count >= 3 {
+            return
+        }
+        
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "PostViewController") as! PostViewController
         viewController.post = post
+        viewController.selectedClass = selectedClass
         
         var bookmark_key = ""
         for key in bookmarked.keys {
@@ -395,7 +414,31 @@ class PostsViewController: UIViewController, UITableViewDataSource, UITableViewD
             let dateFormatter = DateFormatter.init()
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             let now = dateFormatter.string(from: Date())
-            self.databaseReference.child("post_reports").child(post.class_id).child(post.id!).childByAutoId().setValue(["report_date": now, "report_description": "inappropriate", "report_user_id": Auth.auth().currentUser!.uid])
+            self.databaseReference.child("post_reports").child(post.class_id).child(post.id!).observeSingleEvent(of: .value, with: { (snapshot) in
+                var isReported = false
+                for child in snapshot.children {
+                    if let child_snapshot = child as? DataSnapshot {
+                        if let report_user_id = child_snapshot.childSnapshot(forPath: "report_user_id").value as? String {
+                            if report_user_id == Auth.auth().currentUser!.uid {
+                                isReported = true
+                                break
+                            }
+                        }
+                    }
+                }
+                
+                if isReported == false {
+                    self.databaseReference.child("post_reports").child(post.class_id).child(post.id!).childByAutoId().setValue(["report_date": now, "report_description": "inappropriate", "report_user_id": Auth.auth().currentUser!.uid])
+                    
+                    self.databaseReference.child("posts").child(post.class_id).child(post.id!).child("report_count").observeSingleEvent(of: .value, with: { (snapshot) in
+                        var report_count = 1
+                        if let count = snapshot.value as? Int {
+                            report_count = count + 1
+                        }
+                        self.databaseReference.child("posts").child(post.class_id).child(post.id!).child("report_count").setValue(report_count)
+                    })
+                }
+            })
         }
         alertController.addAction(okAction)
         
@@ -409,7 +452,15 @@ class PostsViewController: UIViewController, UITableViewDataSource, UITableViewD
     func postCellDeleteButtonClicked(_ post: Post) {
         let alertController = UIAlertController.init(title: nil, message: "Are you sure you want to delete this post?", preferredStyle: .actionSheet)
         let okAction = UIAlertAction.init(title: "Delete", style: .destructive) { (action) in
-            self.databaseReference.child("posts").child(post.class_id).child(post.id!).child("deleted").setValue(1)
+            self.databaseReference.child("posts").child(post.class_id).child(post.id!).child("deleted").setValue(1, withCompletionBlock: { (error, ref) in
+                if error == nil {
+                    if let last_post = self.selectedClass!.last_post {
+                        if post.id! >= last_post.id! {
+                            self.updateLatestPost(cur_post: post)
+                        }
+                    }
+                }
+            })
         }
         alertController.addAction(okAction)
         
@@ -420,16 +471,44 @@ class PostsViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.present(alertController, animated: true, completion: nil)
     }
     
+    func updateLatestPost(cur_post: Post) {
+        self.databaseReference.child("classes").child(cur_post.class_id).child("last_post").child("id").observeSingleEvent(of: .value) { (snapshot) in
+            if let id = snapshot.value as? String {
+                if id == cur_post.id! {
+                    self.databaseReference.child("posts").child(self.selectedClass!.id).queryLimited(toLast: 20).observeSingleEvent(of: .value) { (snapshot) in
+                        
+                        var recent_posts = [Post]()
+                        for child in snapshot.children {
+                            guard let child_snapshot = child as? DataSnapshot else {
+                                continue
+                            }
+                            if let recent_post = Post.init(snapshot: child_snapshot) {
+                                recent_posts.append(recent_post)
+                            }
+                        }
+                        recent_posts.sort(by: {$0.post_date > $1.post_date})
+                        
+                        var new_latest_post: Post?
+                        for recent_post in recent_posts {
+                            if recent_post.deleted == 0 {
+                                new_latest_post = recent_post
+                                break
+                            }
+                        }
+                        
+                        if new_latest_post == nil {
+                            self.databaseReference.child("classes").child(cur_post.class_id).child("last_post").removeValue()
+                        } else {
+                            self.databaseReference.child("classes").child(cur_post.class_id).child("last_post").setValue(new_latest_post?.toAnyObject())
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     func postCellPlayButtonClicked(_ post: Post) {
         if post.video != "" {
-//            let videoURL = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
-//            let player = AVPlayer(url: videoURL!)
-//            let playerViewController = AVPlayerViewController()
-//            playerViewController.player = player
-//            self.present(playerViewController, animated: true) {
-//                playerViewController.player!.play()
-//            }
-            
             storageReference.child(post.video).downloadURL { (url, error) in
                 if let error = error {
                     print(error.localizedDescription)

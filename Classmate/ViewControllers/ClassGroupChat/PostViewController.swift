@@ -20,7 +20,7 @@ class PostViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var postDateLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var descriptionTextView: UITextView!
     @IBOutlet weak var thumbImageView: UIImageView!
     @IBOutlet weak var likeImageView: UIImageView!
     @IBOutlet weak var bookmarkImageView: UIImageView!
@@ -54,6 +54,7 @@ class PostViewController: UIViewController, UITableViewDelegate, UITableViewData
     var commentLikeHandle: UInt = 2
     
     var commentLiked: [String : String] = [:]
+    var selectedClass: Class?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,9 +113,9 @@ class PostViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
 
     func getLabelHeight(_ text: String, fontsize: Int) -> CGFloat {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width - 30, height: CGFloat.greatestFiniteMagnitude))
-        label.numberOfLines = 0
-        label.lineBreakMode = NSLineBreakMode.byTruncatingTail
+        let label = UITextView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width - 20, height: CGFloat.greatestFiniteMagnitude))
+//        label.numberOfLines = 0
+//        label.lineBreakMode = NSLineBreakMode.byTruncatingTail
         label.font = UIFont.init(name: "Avenir-Light", size: CGFloat(fontsize))
         label.text = text
         label.sizeToFit()
@@ -125,34 +126,50 @@ class PostViewController: UIViewController, UITableViewDelegate, UITableViewData
         if post!.video != "" {
             playButton.isHidden = false
             thumbContainerView.isHidden = false
-            headerView.frame.size.height = 80.0 + getLabelHeight(post!.description, fontsize: 15) + 410.0
+            headerView.frame.size.height = 80.0 + getLabelHeight(post!.description, fontsize: 14) + 410.0
             
             if post!.image != "" {
-                storageReference.child(post!.image).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+                storageReference.child(post!.image).downloadURL { (url, error) in
                     if let error = error {
                         print(error.localizedDescription)
                     } else {
-                        self.thumbImageView.image = UIImage.init(data: data!)
+                        self.thumbImageView.sd_setImage(with: url, completed: nil)
                     }
                 }
+                
+//                storageReference.child(post!.image).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+//                    if let error = error {
+//                        print(error.localizedDescription)
+//                    } else {
+//                        self.thumbImageView.image = UIImage.init(data: data!)
+//                    }
+//                }
             }
         } else if post!.image != "" {
             playButton.isHidden = true
             thumbContainerView.isHidden = false
-            headerView.frame.size.height = 80.0 + getLabelHeight(post!.description, fontsize: 15) + 410.0
+            headerView.frame.size.height = 80.0 + getLabelHeight(post!.description, fontsize: 14) + 410.0
             
-            storageReference.child(post!.image).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+            storageReference.child(post!.image).downloadURL { (url, error) in
                 if let error = error {
                     print(error.localizedDescription)
                 } else {
-                    self.thumbImageView.image = UIImage.init(data: data!)
+                    self.thumbImageView.sd_setImage(with: url, completed: nil)
                 }
             }
+            
+//            storageReference.child(post!.image).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+//                if let error = error {
+//                    print(error.localizedDescription)
+//                } else {
+//                    self.thumbImageView.image = UIImage.init(data: data!)
+//                }
+//            }
         } else {
             playButton.isHidden = true
             thumbContainerView.isHidden = true
-            headerView.frame.size.height = 80.0 + getLabelHeight(post!.description, fontsize: 15) + 55.0
-            descriptionLabel.frame.size.height = headerView.frame.size.height - 130
+            headerView.frame.size.height = 80.0 + getLabelHeight(post!.description, fontsize: 14) + 55.0
+            descriptionTextView.frame.size.height = headerView.frame.size.height - 130
         }
         
         userPhotoImageView.layer.cornerRadius = userPhotoImageView.bounds.width / 2.0
@@ -163,13 +180,21 @@ class PostViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         if let poster = post!.poster {
             userNameLabel.text = poster.name
-            storageReference.child(poster.photo).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+            storageReference.child(poster.photo).downloadURL { (url, error) in
                 if let error = error {
                     print(error.localizedDescription)
                 } else {
-                    self.userPhotoImageView.image = UIImage.init(data: data!)
+                    self.userPhotoImageView.sd_setImage(with: url, completed: nil)
                 }
             }
+            
+//            storageReference.child(poster.photo).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+//                if let error = error {
+//                    print(error.localizedDescription)
+//                } else {
+//                    self.userPhotoImageView.image = UIImage.init(data: data!)
+//                }
+//            }
             
             if Auth.auth().currentUser!.uid == poster.id {
                 reportContainerViw.isHidden = true
@@ -181,10 +206,20 @@ class PostViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         
         titleLabel.text = post!.title
-        descriptionLabel.text = post!.description
+        descriptionTextView.text = post!.description
         postDateLabel.text = GlobalFunction.sharedManager.getLocalTimeStampFromUTC(post!.post_date)
         likeLabel.text = "\(post!.like_count)"
         commentLabel.text = "\(post!.comment_count)"
+        
+        descriptionTextView.textColor = UIColor.black
+        titleLabel.textColor = UIColor.black
+        
+        if post!.report_count >= 3 {
+            descriptionTextView.text = "This post has been flagged due to inappropriate content."
+            titleLabel.text = "Inappropriate content"
+            descriptionTextView.textColor = UIColor.gray
+            titleLabel.textColor = UIColor.gray
+        }
         
         likeImageView.image = UIImage.init(named: "Image_like_black")
         if likeKey != "" {
@@ -436,7 +471,31 @@ class PostViewController: UIViewController, UITableViewDelegate, UITableViewData
             let dateFormatter = DateFormatter.init()
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             let now = dateFormatter.string(from: Date())
-            self.databaseReference.child("post_reports").child(self.post!.class_id).child(self.post!.id!).childByAutoId().setValue(["report_date": now, "report_description": "inappropriate", "report_user_id": Auth.auth().currentUser!.uid])
+            self.databaseReference.child("post_reports").child(self.post!.class_id).child(self.post!.id!).observeSingleEvent(of: .value, with: { (snapshot) in
+                var isReported = false
+                for child in snapshot.children {
+                    if let child_snapshot = child as? DataSnapshot {
+                        if let report_user_id = child_snapshot.childSnapshot(forPath: "report_user_id").value as? String {
+                            if report_user_id == Auth.auth().currentUser!.uid {
+                                isReported = true
+                                break
+                            }
+                        }
+                    }
+                }
+                
+                if isReported == false {
+                    self.databaseReference.child("post_reports").child(self.post!.class_id).child(self.post!.id!).childByAutoId().setValue(["report_date": now, "report_description": "inappropriate", "report_user_id": Auth.auth().currentUser!.uid])
+                    self.databaseReference.child("posts").child(self.post!.class_id).child(self.post!.id!).child("report_count").observeSingleEvent(of: .value, with: { (snapshot) in
+                        var report_count = 1
+                        if let count = snapshot.value as? Int {
+                            report_count = count + 1
+                        }
+                        self.databaseReference.child("posts").child(self.post!.class_id).child(self.post!.id!).child("report_count").setValue(report_count)
+                    })
+                }
+            })
+            
         }
         alertController.addAction(okAction)
         
@@ -450,8 +509,16 @@ class PostViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBAction func deleteButtonClicked(_ sender: Any) {
         let alertController = UIAlertController.init(title: nil, message: "Are you sure you want to delete this post?", preferredStyle: .actionSheet)
         let okAction = UIAlertAction.init(title: "Delete", style: .destructive) { (action) in
-            self.databaseReference.child("posts").child(self.post!.class_id).child(self.post!.id!).child("deleted").setValue(1)
-            self.navigationController?.popViewController(animated: true)
+            self.databaseReference.child("posts").child(self.post!.class_id).child(self.post!.id!).child("deleted").setValue(1, withCompletionBlock: { (error, ref) in
+                if error == nil {
+                    if let last_post = self.selectedClass!.last_post {
+                        if self.post!.id! >= last_post.id! {
+                            self.updateLatestPost()
+                        }
+                    }
+                    self.navigationController?.popViewController(animated: true)
+                }
+            })
         }
         alertController.addAction(okAction)
         
@@ -460,6 +527,41 @@ class PostViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func updateLatestPost() {
+        self.databaseReference.child("classes").child(selectedClass!.id).child("last_post").child("id").observeSingleEvent(of: .value) { (snapshot) in
+            if let id = snapshot.value as? String {
+                if id == self.post!.id! {
+                    self.databaseReference.child("posts").child(self.selectedClass!.id).queryLimited(toLast: 20).observeSingleEvent(of: .value) { (snapshot) in
+                        var recent_posts = [Post]()
+                        for child in snapshot.children {
+                            guard let child_snapshot = child as? DataSnapshot else {
+                                continue
+                            }
+                            if let recent_post = Post.init(snapshot: child_snapshot) {
+                                recent_posts.append(recent_post)
+                            }
+                        }
+                        recent_posts.sort(by: {$0.post_date > $1.post_date})
+                        
+                        var new_latest_post: Post?
+                        for recent_post in recent_posts {
+                            if recent_post.deleted == 0 {
+                                new_latest_post = recent_post
+                                break
+                            }
+                        }
+                        
+                        if new_latest_post == nil {
+                            self.databaseReference.child("classes").child(self.post!.class_id).child("last_post").removeValue()
+                        } else {
+                            self.databaseReference.child("classes").child(self.post!.class_id).child("last_post").setValue(new_latest_post?.toAnyObject())
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func commentCellDeleteButtonClicked(_ comment: Comment) {

@@ -10,6 +10,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseStorage
 import FirebaseDatabase
+import SDWebImage
 
 protocol PostImageTableViewCellDelegate: NSObjectProtocol {
     func postCellLikeButtonClicked(_ index: Int, _ like_count: Int)
@@ -25,7 +26,7 @@ class PostImageTableViewCell: UITableViewCell {
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var postDateLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var descriptionTextView: UITextView!
     @IBOutlet weak var thumbImageView: UIImageView!
     @IBOutlet weak var likeImageView: UIImageView!
     @IBOutlet weak var bookmarkImageView: UIImageView!
@@ -33,6 +34,7 @@ class PostImageTableViewCell: UITableViewCell {
     @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var reportContainerViw: UIView!
     @IBOutlet weak var deleteContainerView: UIView!
+    @IBOutlet weak var toolbarView: UIView!
     
     let databaseReference = Database.database().reference()
     let storageReference = Storage.storage().reference()
@@ -64,13 +66,21 @@ class PostImageTableViewCell: UITableViewCell {
         
         if let poster = post.poster {
             userNameLabel.text = poster.name
-            storageReference.child(poster.photo).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+            storageReference.child(poster.photo).downloadURL { (url, error) in
                 if let error = error {
                     print(error.localizedDescription)
                 } else {
-                    self.userPhotoImageView.image = UIImage.init(data: data!)
+                    self.userPhotoImageView.sd_setImage(with: url, completed: nil)
                 }
             }
+            
+//            storageReference.child(poster.photo).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+//                if let error = error {
+//                    print(error.localizedDescription)
+//                } else {
+//                    self.userPhotoImageView.image = UIImage.init(data: data!)
+//                }
+//            }
             
             if Auth.auth().currentUser!.uid == poster.id {
                 reportContainerViw.isHidden = true
@@ -82,18 +92,45 @@ class PostImageTableViewCell: UITableViewCell {
         }
         
         titleLabel.text = post.title
-        descriptionLabel.text = post.description
+        descriptionTextView.text = post.description
         postDateLabel.text = GlobalFunction.sharedManager.getLocalTimeStampFromUTC(post.post_date)
         likeLabel.text = "\(post.like_count)"
         commentLabel.text = "\(post.comment_count)"
         
-        if post.image != "" {
-            storageReference.child(post.image).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
-                if let error = error {
-                    print(error.localizedDescription)
-                } else {
-                    self.thumbImageView.image = UIImage.init(data: data!)
+        descriptionTextView.textColor = UIColor.black
+        titleLabel.textColor = UIColor.black
+        
+        if post.report_count >= 3 {
+            descriptionTextView.text = "This post has been flagged due to inappropriate content."
+            titleLabel.text = "Inappropriate content"
+            descriptionTextView.textColor = UIColor.gray
+            titleLabel.textColor = UIColor.gray
+            
+            descriptionTextView.frame.size.height = 60
+            toolbarView.isHidden = true
+            thumbImageView.isHidden = true
+        } else {
+            toolbarView.isHidden = false
+            thumbImageView.isHidden = false
+            descriptionTextView.sizeToFit()
+            descriptionTextView.frame.size.width = self.bounds.width - 20
+            
+            if post.image != "" {
+                storageReference.child(post.image).downloadURL { (url, error) in
+                    if let error = error {
+                        print(error.localizedDescription)
+                    } else {
+                        self.thumbImageView.sd_setImage(with: url, completed: nil)
+                    }
                 }
+                
+                //            storageReference.child(post.image).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+                //                if let error = error {
+                //                    print(error.localizedDescription)
+                //                } else {
+                //                    self.thumbImageView.image = UIImage.init(data: data!)
+                //                }
+                //            }
             }
         }
         

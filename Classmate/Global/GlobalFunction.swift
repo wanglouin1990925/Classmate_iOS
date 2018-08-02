@@ -74,9 +74,9 @@ open class GlobalFunction {
         guard let date = dateFormatter.date(from: utc) else { return "" }
         
         if GlobalVariable.sharedManager.is24Format {
-            dateFormatter.dateFormat = "MMM d, yyyy - h:mm a"
-        } else {
             dateFormatter.dateFormat = "MMM d, yyyy - H:mm"
+        } else {
+            dateFormatter.dateFormat = "MMM d, yyyy - h:mm a"
         }
         
         dateFormatter.timeZone = TimeZone.current

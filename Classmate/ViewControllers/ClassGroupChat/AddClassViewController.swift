@@ -134,8 +134,7 @@ class AddClassViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }
             self.tableView.reloadData()
-        }
-        
+        }        
         return true
     }
     

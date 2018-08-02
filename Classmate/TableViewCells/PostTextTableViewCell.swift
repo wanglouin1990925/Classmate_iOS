@@ -10,6 +10,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseStorage
 import FirebaseDatabase
+import SDWebImage
 
 protocol PostTextTableViewCellDelegate: NSObjectProtocol {
     func postCellLikeButtonClicked(_ index: Int, _ like_count: Int)
@@ -25,13 +26,14 @@ class PostTextTableViewCell: UITableViewCell {
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var postDateLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var descriptionTextView: UITextView!
     @IBOutlet weak var likeLabel: UILabel!
     @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var likeImageView: UIImageView!
     @IBOutlet weak var bookmarkImageView: UIImageView!
     @IBOutlet weak var reportContainerViw: UIView!
     @IBOutlet weak var deleteContainerView: UIView!
+    @IBOutlet weak var toolbarView: UIView!
     
     let databaseReference = Database.database().reference()
     let storageReference = Storage.storage().reference()
@@ -63,13 +65,21 @@ class PostTextTableViewCell: UITableViewCell {
         
         if let poster = post.poster {
             userNameLabel.text = poster.name
-            storageReference.child(poster.photo).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+            storageReference.child(poster.photo).downloadURL { (url, error) in
                 if let error = error {
                     print(error.localizedDescription)
                 } else {
-                    self.userPhotoImageView.image = UIImage.init(data: data!)
+                    self.userPhotoImageView.sd_setImage(with: url, completed: nil)
                 }
             }
+            
+//            storageReference.child(poster.photo).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+//                if let error = error {
+//                    print(error.localizedDescription)
+//                } else {
+//                    self.userPhotoImageView.image = UIImage.init(data: data!)
+//                }
+//            }
             
             if Auth.auth().currentUser!.uid == poster.id {
                 reportContainerViw.isHidden = true
@@ -81,10 +91,29 @@ class PostTextTableViewCell: UITableViewCell {
         }
         
         titleLabel.text = post.title
-        descriptionLabel.text = post.description
+        descriptionTextView.text = post.description
         postDateLabel.text = GlobalFunction.sharedManager.getLocalTimeStampFromUTC(post.post_date)
         likeLabel.text = "\(post.like_count)"
         commentLabel.text = "\(post.comment_count)"
+        
+        descriptionTextView.textColor = UIColor.black
+        titleLabel.textColor = UIColor.black
+        
+        if post.report_count >= 3 {
+            descriptionTextView.text = "This post has been flagged due to inappropriate content."
+            titleLabel.text = "Inappropriate content"
+            descriptionTextView.textColor = UIColor.gray
+            titleLabel.textColor = UIColor.gray
+            
+            toolbarView.isHidden = true
+            
+            descriptionTextView.frame.size.height = 60
+        } else {
+            toolbarView.isHidden = false
+            
+            descriptionTextView.sizeToFit()
+            descriptionTextView.frame.size.width = self.bounds.width - 20
+        }
     }
     
     @IBAction func likeButtonClicked(_ sender: Any) {

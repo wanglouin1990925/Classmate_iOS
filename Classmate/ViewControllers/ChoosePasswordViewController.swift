@@ -104,6 +104,7 @@ class ChoosePasswordViewController: UIViewController {
                         
                         self.verificationOverView.frame = CGRect.init(x: 0, y: 0, width: self.view.bounds.width, height: self.containerView.bounds.height)
                         self.containerView.addSubview(self.verificationOverView)
+                        self.view.endEditing(true)
                         
                         Auth.auth().currentUser?.sendEmailVerification { (error) in
                             if let error = error {
@@ -133,6 +134,7 @@ class ChoosePasswordViewController: UIViewController {
                         self.nextButton.isHidden = true
                         self.verificationOverView.frame = CGRect.init(x: 0, y: 0, width: self.view.bounds.width, height: self.containerView.bounds.height)
                         self.containerView.addSubview(self.verificationOverView)
+                        self.view.endEditing(true)
                         
                         Auth.auth().currentUser?.sendEmailVerification { (error) in
                             if let error = error {

@@ -32,4 +32,3 @@ class StartViewController: UIViewController {
     }
     
 }
-

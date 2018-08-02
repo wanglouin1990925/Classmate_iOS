@@ -46,6 +46,9 @@ PODS:
   - NVActivityIndicatorView (4.1.1):
     - NVActivityIndicatorView/Presenter (= 4.1.1)
   - NVActivityIndicatorView/Presenter (4.1.1)
+  - SDWebImage (4.3.3):
+    - SDWebImage/Core (= 4.3.3)
+  - SDWebImage/Core (4.3.3)
   - "UITextView+Placeholder (1.2.1)"
 
 DEPENDENCIES:
@@ -56,6 +59,7 @@ DEPENDENCIES:
   - Firebase/Storage
   - NextGrowingTextView
   - NVActivityIndicatorView (~> 4.1.1)
+  - SDWebImage
   - "UITextView+Placeholder"
 
 SPEC REPOS:
@@ -74,6 +78,7 @@ SPEC REPOS:
     - nanopb
     - NextGrowingTextView
     - NVActivityIndicatorView
+    - SDWebImage
     - "UITextView+Placeholder"
 
 SPEC CHECKSUMS:
@@ -91,8 +96,9 @@ SPEC CHECKSUMS:
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   NextGrowingTextView: 78c8b96f7ac6dc845f5babb27dcf7c18dd3210ec
   NVActivityIndicatorView: 60109b9bf46efc2e71ab81453196ccdfdfeea870
+  SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
   "UITextView+Placeholder": 0c3efd97f37ea64bde7f34cc6e90fe02e87b3909
 
-PODFILE CHECKSUM: e9b0c5d6ddf579b8d7e6b869c63bdb2eacdbe55b
+PODFILE CHECKSUM: 7db9ca37045c7316a869b91140f1a4a438817b4f
 
 COCOAPODS: 1.5.3

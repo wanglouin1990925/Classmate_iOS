@@ -38,13 +38,12 @@ class GroupChatViewController: UIViewController, UITableViewDelegate, UITableVie
         
         // Configure Refresh Control
         refreshControl.addTarget(self, action: #selector(refreshData(_:)), for: .valueChanged)
-        
-        self.loadClasses()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.setupObservers()
+        self.loadClasses()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -135,6 +134,7 @@ class GroupChatViewController: UIViewController, UITableViewDelegate, UITableVie
         let group = classes[indexPath.row]
         if let last_post = classes[indexPath.row].last_post {
             if last_post.video != "" && last_post.image != "" {
+                
                 let cell = tableView.dequeueReusableCell(withIdentifier: "VideoCell", for: indexPath)
                 
                 let titleLabel = cell.viewWithTag(100) as! UILabel
@@ -150,7 +150,7 @@ class GroupChatViewController: UIViewController, UITableViewDelegate, UITableVie
                         unreadCount = (Int(lastPost.id!) ?? 0) + 1
                     }
                 }
-                if unreadCount == 0 {
+                if unreadCount <= 0 {
                     badgeButton.badgeString = ""
                     titleLabel.frame.size.width = self.view.frame.width - 75 - 15
                     descriptionLabel.frame.size.width = self.view.frame.width - 75 - 15
@@ -161,15 +161,30 @@ class GroupChatViewController: UIViewController, UITableViewDelegate, UITableVie
                 }
                 
                 titleLabel.text = group.title
+                
+                descriptionLabel.textColor = UIColor.black
                 descriptionLabel.text = "\(last_post.title)"
                 
-                storageReference.child(last_post.image).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+                if last_post.report_count >= 3 {
+                    descriptionLabel.textColor = UIColor.gray
+                    descriptionLabel.text = "Inappropriate content"
+                }
+                
+                storageReference.child(last_post.image).downloadURL { (url, error) in
                     if let error = error {
                         print(error.localizedDescription)
                     } else {
-                        thumbImageView.image = UIImage.init(data: data!)
+                        thumbImageView.sd_setImage(with: url, completed: nil)
                     }
                 }
+                
+//                storageReference.child(last_post.image).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+//                    if let error = error {
+//                        print(error.localizedDescription)
+//                    } else {
+//                        thumbImageView.image = UIImage.init(data: data!)
+//                    }
+//                }
                 return cell
             } else if last_post.image != "" {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "ImageCell", for: indexPath)
@@ -187,7 +202,7 @@ class GroupChatViewController: UIViewController, UITableViewDelegate, UITableVie
                         unreadCount = (Int(lastPost.id!) ?? 0) + 1
                     }
                 }
-                if unreadCount == 0 {
+                if unreadCount <= 0 {
                     badgeButton.badgeString = ""
                     titleLabel.frame.size.width = self.view.frame.width - 75 - 15
                     descriptionLabel.frame.size.width = self.view.frame.width - 75 - 15
@@ -198,15 +213,30 @@ class GroupChatViewController: UIViewController, UITableViewDelegate, UITableVie
                 }
                 
                 titleLabel.text = group.title
+                
+                descriptionLabel.textColor = UIColor.black
                 descriptionLabel.text = "\(last_post.title)"
                 
-                storageReference.child(last_post.image).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+                if last_post.report_count >= 3 {
+                    descriptionLabel.textColor = UIColor.gray
+                    descriptionLabel.text = "Inappropriate content"
+                }
+                
+                storageReference.child(last_post.image).downloadURL { (url, error) in
                     if let error = error {
                         print(error.localizedDescription)
                     } else {
-                        thumbImageView.image = UIImage.init(data: data!)
+                        thumbImageView.sd_setImage(with: url, completed: nil)
                     }
                 }
+                
+//                storageReference.child(last_post.image).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+//                    if let error = error {
+//                        print(error.localizedDescription)
+//                    } else {
+//                        thumbImageView.image = UIImage.init(data: data!)
+//                    }
+//                }
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "TextCell", for: indexPath)
@@ -223,7 +253,7 @@ class GroupChatViewController: UIViewController, UITableViewDelegate, UITableVie
                         unreadCount = (Int(lastPost.id!) ?? 0) + 1
                     }
                 }
-                if unreadCount == 0 {
+                if unreadCount <= 0 {
                     badgeButton.badgeString = ""
                     titleLabel.frame.size.width = self.view.frame.width - 15 - 15
                     descriptionLabel.frame.size.width = self.view.frame.width - 15 - 15
@@ -234,7 +264,14 @@ class GroupChatViewController: UIViewController, UITableViewDelegate, UITableVie
                 }
                 
                 titleLabel.text = group.title
+                
+                descriptionLabel.textColor = UIColor.black
                 descriptionLabel.text = "\(last_post.title)"
+                
+                if last_post.report_count >= 3 {
+                    descriptionLabel.textColor = UIColor.gray
+                    descriptionLabel.text = "Inappropriate content"
+                }
                 
                 return cell
             }

@@ -50,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if formatter.contains("a") {
             GlobalVariable.sharedManager.is24Format = false
         } else {
-            GlobalVariable.sharedManager.is24Format = false
+            GlobalVariable.sharedManager.is24Format = true
         }
         
         return true

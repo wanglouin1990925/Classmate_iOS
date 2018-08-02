@@ -21,7 +21,7 @@ class CommentTableViewCell: UITableViewCell {
     @IBOutlet weak var userPhotoImageView: UIImageView!
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var postDateLabel: UILabel!
-    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var descriptionTextView: UITextView!
     @IBOutlet weak var likeLabel: UILabel!
     @IBOutlet weak var likeImageView: UIImageView!
     
@@ -55,16 +55,25 @@ class CommentTableViewCell: UITableViewCell {
         
         if let comment_user = comment.comment_user {
             userNameLabel.text = comment_user.name
-            storageReference.child(comment_user.photo).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+            storageReference.child(comment_user.photo).downloadURL { (url, error) in
                 if let error = error {
                     print(error.localizedDescription)
                 } else {
-                    self.userPhotoImageView.image = UIImage.init(data: data!)
+                    self.userPhotoImageView.sd_setImage(with: url, completed: nil)
                 }
             }
+            
+//            storageReference.child(comment_user.photo).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+//                if let error = error {
+//                    print(error.localizedDescription)
+//                } else {
+//                    self.userPhotoImageView.image = UIImage.init(data: data!)
+//                }
+//            }
+            
         }
         
-        descriptionLabel.text = comment.comment_description
+        descriptionTextView.text = comment.comment_description
         postDateLabel.text = GlobalFunction.sharedManager.getLocalTimeStampFromUTC(comment.comment_date)
         likeLabel.text = "\(comment.comment_like_count)"
         

@@ -112,6 +112,10 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
     
     @IBAction func checkButtonClicked(_ sender: Any) {
         guard let description = descriptionLabel.text else {
+            return
+        }
+        
+        if description == "" {
             GlobalFunction.sharedManager.showAlertMessage("Error", "Please enter description")
             return
         }
@@ -123,6 +127,7 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
         
         let dateFormatter = DateFormatter.init()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.timeZone = TimeZone.init(abbreviation: "UTC")
         let post_date = dateFormatter.string(from: Date())
         
         let class_id = selectedClass!.id
@@ -132,20 +137,28 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
         
         let like_count = 0
         let comment_count = 0
+        let report_count = 0
         
         if imageData != nil {
             GlobalFunction.sharedManager.showProgressView("Uploading...")
             upload(videoData as Data?, imageData: imageData!) { (success, video, image) in
                 GlobalFunction.sharedManager.hideProgressView()
                 if success {
-                    let post = Post.init(class_id: class_id, title: title, description: description, category: category, post_date: post_date, image: image, video: video, like_count: like_count, comment_count: comment_count, poster: poster, key: nil)
+                    let post = Post.init(class_id: class_id, title: title, description: description, category: category, post_date: post_date, image: image, video: video, like_count: like_count, comment_count: comment_count, report_count: report_count, poster: poster, key: nil)
                     
                     self.databaseReference.child("posts").child(self.selectedClass!.id).observeSingleEvent(of: .value, with: { (snapshot) in
                         self.databaseReference.child("posts").child(self.selectedClass!.id).child("\(snapshot.childrenCount)").setValue(post.toAnyObject(), withCompletionBlock: { (error, ref) in
                             if error == nil {
-                                let last_post = Post.init(class_id: class_id, title: title, description: description, category: category, post_date: post_date, image: image, video: video, like_count: like_count, comment_count: comment_count, poster: poster, key: ref.key)
+                                let last_post = Post.init(class_id: class_id, title: title, description: description, category: category, post_date: post_date, image: image, video: video, like_count: like_count, comment_count: comment_count, report_count: report_count, poster: poster, key: ref.key)
                                 
                                 self.databaseReference.child("classes").child(self.selectedClass!.id).child("last_post").setValue(last_post.toAnyObject())
+                                self.databaseReference.child("bookmarks").child(last_post.class_id).child(last_post.id!).childByAutoId().setValue(["bookmark_user_id": Auth.auth().currentUser!.uid]) { (error, ref) in
+                                    if error != nil {
+                                        
+                                    } else {
+                                        self.databaseReference.child("user_bookmarks").child(Auth.auth().currentUser!.uid).child(last_post.class_id).child(last_post.id!).setValue(ref.key)
+                                    }
+                                }
                                 
                                 self.delegate?.createPostViewControllerDidPosted()
                                 self.dismiss(animated: true, completion: nil)
@@ -157,15 +170,22 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
                 }
             }
         } else {
-            let post = Post.init(class_id: class_id, title: title, description: description, category: category, post_date: post_date, image: nil, video: nil, like_count: like_count, comment_count: comment_count, poster: poster, key: nil)
+            let post = Post.init(class_id: class_id, title: title, description: description, category: category, post_date: post_date, image: nil, video: nil, like_count: like_count, comment_count: comment_count, report_count: report_count, poster: poster, key: nil)
             
             self.databaseReference.child("posts").child(self.selectedClass!.id).observeSingleEvent(of: .value, with: { (snapshot) in
                 self.databaseReference.child("posts").child(self.selectedClass!.id).child("\(snapshot.childrenCount)").setValue(post.toAnyObject(), withCompletionBlock: { (error, ref) in
                     if error == nil {
-                        let last_post = Post.init(class_id: class_id, title: title, description: description, category: category, post_date: post_date, image: nil, video: nil, like_count: like_count, comment_count: comment_count, poster: poster, key: ref.key)
+                        let last_post = Post.init(class_id: class_id, title: title, description: description, category: category, post_date: post_date, image: nil, video: nil, like_count: like_count, comment_count: comment_count, report_count: report_count, poster: poster, key: ref.key)
                         
                         self.databaseReference.child("classes").child(self.selectedClass!.id).child("last_post").setValue(last_post.toAnyObject())
-
+                        self.databaseReference.child("bookmarks").child(last_post.class_id).child(last_post.id!).childByAutoId().setValue(["bookmark_user_id": Auth.auth().currentUser!.uid]) { (error, ref) in
+                            if error != nil {
+                                
+                            } else {
+                                self.databaseReference.child("user_bookmarks").child(Auth.auth().currentUser!.uid).child(last_post.class_id).child(last_post.id!).setValue(ref.key)
+                            }
+                        }
+                        
                         self.delegate?.createPostViewControllerDidPosted()
                         self.dismiss(animated: true, completion: nil)
                     }
@@ -201,6 +221,7 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
                 picker.sourceType = .camera
                 picker.mediaTypes = [kUTTypeMovie as String, kUTTypeVideo as String]
                 picker.cameraCaptureMode = .video
+                picker.videoMaximumDuration = 15
                 self.present(picker, animated: true, completion: nil)
             } else {
                 picker.sourceType = .photoLibrary
@@ -218,6 +239,7 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
         let albumVideoButton = UIAlertAction(title: "Choose Existing Video", style: .default, handler: { (action) -> Void in
             picker.sourceType = .photoLibrary
             picker.mediaTypes = [kUTTypeMovie as String, kUTTypeVideo as String]
+            picker.videoMaximumDuration = 15
             self.present(picker, animated: true, completion: nil)
         })
         
@@ -235,8 +257,7 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
     }
     
     @IBAction func categoryButtonClicked(_ sender: Any) {
-        let categories = ["Homework", "Project", "Exam", "Other"]
-        
+        let categories = ["Homework", "Project", "Exam", "Other"]        
         let alertController = UIAlertController(title: nil, message: "Choose a category", preferredStyle: .actionSheet)
         
         for i in 0..<categories.count {

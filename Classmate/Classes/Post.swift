@@ -20,12 +20,13 @@ struct Post {
     let video: String
     let poster: Poster?
     let category: String
+    let report_count: Int
     var deleted = 0
     
     var like_count: Int
     var comment_count: Int
     
-    init(class_id: String, title: String, description: String, category: String, post_date: String, image: String?, video: String?, like_count: Int, comment_count: Int, poster: Poster, key: String?) {
+    init(class_id: String, title: String, description: String, category: String, post_date: String, image: String?, video: String?, like_count: Int, comment_count: Int, report_count: Int, poster: Poster, key: String?) {
         self.id = key
         self.title = title
         self.description = description
@@ -36,6 +37,7 @@ struct Post {
         self.video = video ?? ""
         self.poster = poster
         self.like_count = like_count
+        self.report_count = report_count
         self.comment_count = comment_count
     }
     
@@ -65,6 +67,12 @@ struct Post {
             self.deleted = deleted
         } else {
             self.deleted = 0
+        }
+        
+        if let report_count = value["report_count"] as? Int {
+            self.report_count = report_count
+        } else {
+            self.report_count = 0
         }
 
         self.title = title
@@ -99,7 +107,8 @@ struct Post {
                     "photo": poster?.photo
                 ],
                 "like_count": like_count,
-                "comment_count": comment_count
+                "comment_count": comment_count,
+                "report_count": report_count
             ]
         }
 
@@ -118,7 +127,8 @@ struct Post {
                 "photo": poster?.photo
             ],
             "like_count": like_count,
-            "comment_count": comment_count
+            "comment_count": comment_count,
+            "report_count": report_count
         ]
     }
     

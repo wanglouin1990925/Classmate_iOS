@@ -10,6 +10,7 @@ import UIKit
 import FirebaseDatabase
 import FirebaseStorage
 import FirebaseAuth
+import SDWebImage
 
 class EditProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
@@ -335,13 +336,21 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         schoolTextField.text = updatedUser?.school
         bioTextView.text = updatedUser?.bio
         
-        storageReference.child(updatedUser?.photo ?? "").getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+        storageReference.child(updatedUser?.photo ?? "").downloadURL { (url, error) in
             if let error = error {
                 print(error.localizedDescription)
             } else {
-                self.photoImageView.image = UIImage.init(data: data!)
+                self.photoImageView.sd_setImage(with: url, completed: nil)
             }
         }
+        
+//        storageReference.child(updatedUser?.photo ?? "").getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+//            if let error = error {
+//                print(error.localizedDescription)
+//            } else {
+//                self.photoImageView.image = UIImage.init(data: data!)
+//            }
+//        }
     }
     
     @IBAction func editButtonClicked(_ sender: Any) {
@@ -356,6 +365,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         let cameraButton = UIAlertAction(title: "Take a Photo", style: .default, handler: { (action) -> Void in
             picker.sourceType = .camera
             picker.cameraCaptureMode = .photo
+            self.present(picker, animated: true, completion: nil)
         })
         
         let albumButton = UIAlertAction(title: "Choose a Photo", style: .default, handler: { (action) -> Void in

@@ -142,15 +142,16 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
                     <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2d8-LZ-kxE">
                         <rect key="frame" x="15" y="154" width="345" height="345"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Image_post_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="AWz-N7-hbc">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Image_post_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="AWz-N7-hbc">
                                 <rect key="frame" x="0.0" y="0.0" width="345" height="344"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OK3-uV-KQC">
                                 <rect key="frame" x="153" y="153" width="40" height="40"/>
@@ -162,16 +163,16 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYk-ym-fMn">
-                        <rect key="frame" x="15" y="80" width="345" height="64"/>
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zaF-ep-PIf">
+                        <rect key="frame" x="10" y="80" width="355" height="64"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <string key="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</string>
-                        <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="15"/>
-                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <nil key="highlightedColor"/>
-                    </label>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="14"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                        <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES"/>
+                    </textView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Lorem ipsum dolor sit amet" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SIV-d7-HBu">
                         <rect key="frame" x="15" y="55" width="345" height="20"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
@@ -190,14 +191,16 @@
                 <outlet property="bookmarkImageView" destination="Dpl-po-v5A" id="Viw-hZ-hPr"/>
                 <outlet property="commentLabel" destination="bO9-Hb-bAN" id="vdS-uC-J7J"/>
                 <outlet property="deleteContainerView" destination="iri-b6-n44" id="LwZ-s1-5P0"/>
-                <outlet property="descriptionLabel" destination="mYk-ym-fMn" id="ZJH-iO-ffD"/>
+                <outlet property="descriptionTextView" destination="zaF-ep-PIf" id="Asm-h0-0du"/>
                 <outlet property="likeImageView" destination="uss-66-wWc" id="NB0-Dc-hiv"/>
                 <outlet property="likeLabel" destination="haf-cx-sdW" id="Rt9-ZC-SQD"/>
                 <outlet property="playButton" destination="OK3-uV-KQC" id="2qV-qe-wLP"/>
                 <outlet property="postDateLabel" destination="7Bg-0N-Zh9" id="sIW-Fj-m0X"/>
                 <outlet property="reportContainerViw" destination="PRt-py-7Ss" id="yna-wD-OuJ"/>
                 <outlet property="thumbImageView" destination="AWz-N7-hbc" id="N4i-WG-Jds"/>
+                <outlet property="thumbnailContainerView" destination="2d8-LZ-kxE" id="01a-8d-Fbd"/>
                 <outlet property="titleLabel" destination="SIV-d7-HBu" id="gTr-BJ-A0Y"/>
+                <outlet property="toolbarView" destination="mK8-BB-Tnq" id="69w-Sa-qk1"/>
                 <outlet property="userNameLabel" destination="OkW-03-e6i" id="rKa-bP-JXg"/>
                 <outlet property="userPhotoImageView" destination="XQv-Mc-gSB" id="LHc-Ee-FfE"/>
             </connections>

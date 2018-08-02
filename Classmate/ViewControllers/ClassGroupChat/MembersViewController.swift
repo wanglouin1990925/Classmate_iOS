@@ -55,13 +55,20 @@ class MembersViewController: UIViewController, UITableViewDataSource, UITableVie
         photoImageView.layer.cornerRadius = photoImageView.bounds.width/2.0
         photoImageView.clipsToBounds = true
         
-        storageReference.child(filtered_members[indexPath.row].photo).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+        storageReference.child(filtered_members[indexPath.row].photo).downloadURL { (url, error) in
             if let error = error {
                 print(error.localizedDescription)
             } else {
-                photoImageView.image = UIImage.init(data: data!)
+                photoImageView.sd_setImage(with: url, completed: nil)
             }
-        }
+        }        
+//        storageReference.child(filtered_members[indexPath.row].photo).getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+//            if let error = error {
+//                print(error.localizedDescription)
+//            } else {
+//                photoImageView.image = UIImage.init(data: data!)
+//            }
+//        }
         
         let nameLabel = cell.viewWithTag(101) as! UILabel
         nameLabel.text = filtered_members[indexPath.row].name
